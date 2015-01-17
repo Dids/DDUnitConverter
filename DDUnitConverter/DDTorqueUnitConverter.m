@@ -12,7 +12,7 @@
 @implementation DDUnitConverter (DDTorqueUnitConverter)
 
 + (id) torqueUnitConverter {
-	return [[[DDTorqueUnitConverter alloc] init] autorelease];
+	return [[DDTorqueUnitConverter alloc] init];
 }
 
 @end

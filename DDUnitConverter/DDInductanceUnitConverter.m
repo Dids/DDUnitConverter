@@ -11,7 +11,7 @@
 @implementation DDUnitConverter (DDInductanceUnitConverter)
 
 + (id) inductanceUnitConverter {
-	return [[[DDInductanceUnitConverter alloc] init] autorelease];
+	return [[DDInductanceUnitConverter alloc] init];
 }
 
 @end

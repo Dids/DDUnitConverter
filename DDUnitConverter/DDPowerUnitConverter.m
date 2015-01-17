@@ -12,7 +12,7 @@
 @implementation DDUnitConverter (DDPowerUnitConverter)
 
 + (id) powerUnitConverter {
-	return [[[DDPowerUnitConverter alloc] init] autorelease];
+	return [[DDPowerUnitConverter alloc] init];
 }
 
 @end

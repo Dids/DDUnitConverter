@@ -80,7 +80,7 @@ typedef NSUInteger DDCurrencyUnit;
 + (NSString *)nameOfCurrencyUnit:(DDCurrencyUnit)unit;
 
 //retrieve the currency symbol of the currency unit
-+ (NSString *)currencySymbolOfCurrencyUnit:(DDCurrencyUnit)unit;
++ (NSString *)codeOfCurrencyUnit:(DDCurrencyUnit)unit;
 
 //refresh the exchange rates
 - (void) refreshExchangeRates;

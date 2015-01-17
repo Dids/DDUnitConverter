@@ -17,8 +17,8 @@
     BOOL finished;
 }
 @property (nonatomic, getter=isFinished) BOOL finished;
-@property (nonatomic, retain) NSError *error;
-@property (nonatomic, readonly) NSString *string;
+@property (nonatomic, strong) NSError *error;
+@property (weak, nonatomic, readonly) NSString *string;
 @end
 
 @implementation DDCurrencyUnitConverterConnectionDelegate
@@ -55,14 +55,9 @@
 }
 
 - (NSString *)string {
-    return [[[NSString alloc] initWithData:data encoding:encoding] autorelease];
+    return [[NSString alloc] initWithData:data encoding:encoding];
 }
 
-- (void)dealloc {
-    [error release];
-    [data release];
-    [super dealloc];
-}
 
 @end
 
@@ -122,60 +117,60 @@ static NSString *_DDCurrencyNames[] = {
     @"SDR"
 };
 
-static NSString *_DDCurrencySymbols[] = {
-    @"€",
-    @"¥",
-    @"£",
-    @"$",
-    @"DA",
-    @"$",
-    @"$",
-    @"BD",
-    @"P",
-    @"R$",
-    @"$",
-    @"$",
-    @"$",
-    @"¥",
-    @"$",
-    @"Kč",
-    @"dkr",
-    @"Ft",
-    @"Kr",
-    @"₹",
-    @"Rp",
-    @"﷼",
-    @"₪",
-    @"лв",
-    @"₩",
-    @"KD",
-    @"LD",
-    @"MR",
-    @"Rs",
-    @"$",
-    @"Rs",
-    @"$",
-    @"kr",
-    @"﷼",
-    @"Rs",
-    @"S/.",
-    @"₱",
-    @"zł",
-    @"﷼",
-    @"руб",
-    @"﷼",
-    @"$",
-    @"R",
-    @"Rs",
-    @"kr",
+static NSString *_DDCurrencyCodes[] = {
+    @"EUR",
+    @"JPY",
+    @"GBP",
+    @"USD",
+    @"DZD",
+    @"ARS",
+    @"AUD",
+    @"BHD",
+    @"BWP",
+    @"BRL",
+    @"BND",
+    @"CAD",
+    @"CLP",
+    @"CNY",
+    @"COP",
+    @"CZK",
+    @"DKK",
+    @"HUF",
+    @"ISK",
+    @"INR",
+    @"IDR",
+    @"IRR",
+    @"ILS",
+    @"KZT",
+    @"KRW",
+    @"KWD",
+    @"LYD",
+    @"MYR",
+    @"MUR",
+    @"MXN",
+    @"NPR",
+    @"NZD",
+    @"NOK",
+    @"OMR",
+    @"PKR",
+    @"PEN",
+    @"PHP",
+    @"PLN",
+    @"QAR",
+    @"RUB",
+    @"SAR",
+    @"SGD",
+    @"ZAR",
+    @"LKR",
+    @"SEK",
     @"CHF",
-    @"฿",
-    @"TT$",
-    @"DT",
-    @"Dh",
-    @"$U",
-    @"Bs",
-    @""
+    @"THB",
+    @"TTD",
+    @"TND",
+    @"AED",
+    @"UYU",
+    @"VEF",
+    @"SDR"
 };
 
 static NSMutableDictionary *_DDCurrencyExchangeRates = nil;
@@ -184,7 +179,7 @@ static dispatch_queue_t updateQueue = nil;
 @implementation DDUnitConverter (DDCurrencyUnitConverter)
 
 + (id) currencyUnitConverter {
-	return [[[DDCurrencyUnitConverter alloc] init] autorelease];
+    return [[DDCurrencyUnitConverter alloc] init];
 }
 
 @end
@@ -197,25 +192,22 @@ static dispatch_queue_t updateQueue = nil;
     return _DDCurrencyNames[unit];
 }
 
-+ (NSString *)currencySymbolOfCurrencyUnit:(DDCurrencyUnit)unit {
++ (NSString *)codeOfCurrencyUnit:(DDCurrencyUnit)unit {
     if (unit > DDCurrencyUnitSDR) { return nil; }
-    return _DDCurrencySymbols[unit];
+    return _DDCurrencyCodes[unit];
 }
 
-+ (NSError *) refreshExchangeRatesInBackground {
++ (NSError *)refreshExchangeRatesInBackground {
 	if ([NSThread currentThread] == [NSThread mainThread]) { return nil; }
-    
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	
 	NSURL * imfURL = [NSURL URLWithString:@"http://www.imf.org/external/np/fin/data/rms_five.aspx?tsvflag=Y"];
     NSURLRequest *imfRequest = [NSURLRequest requestWithURL:imfURL];
     DDCurrencyUnitConverterConnectionDelegate *tmpDelegate = [[DDCurrencyUnitConverterConnectionDelegate alloc] init];
     
     NSURLConnection *imfConnection = [[NSURLConnection alloc] initWithRequest:imfRequest delegate:tmpDelegate];
+
     while ([tmpDelegate isFinished] == NO) {
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate date]];
     }
-    [imfConnection release];
     
     NSString *raw = [tmpDelegate string];
     NSError *error = [tmpDelegate error];
@@ -251,13 +243,7 @@ static dispatch_queue_t updateQueue = nil;
 			}
 		}
 	}
-	
-    [error retain];
-    [tmpDelegate release];
-    
-	[pool drain];
-    
-    return [error autorelease];
+    return error;
 }
 
 + (void) initialize {
@@ -294,8 +280,6 @@ static dispatch_queue_t updateQueue = nil;
 }
 
 - (void)refreshExchangeRatesWithCompletion:(void (^)(NSError *))completionHandler {
-    
-    dispatch_queue_t currentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
     completionHandler = [completionHandler copy];
     dispatch_async(updateQueue, ^{
         NSError *error = [[self class] refreshExchangeRatesInBackground];
@@ -304,10 +288,9 @@ static dispatch_queue_t updateQueue = nil;
             dispatch_block_t block = ^{
                 completionHandler(error);
             };
-            dispatch_async(currentQueue, block);
+            dispatch_async(dispatch_get_main_queue(), block);
         }
     });
-    [completionHandler release];
 }
 
 @end

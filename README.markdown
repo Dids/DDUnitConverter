@@ -8,14 +8,16 @@ Simply copy the "DDUnitConverter" subfolder into your project, and `#import "DDU
 
 You can do the actual conversions like so:
 
-	NSNumber * value = [[DDUnitConverter velocityUnitConverter] convertNumber:[NSNumber numberWithInt:100]
-															         fromUnit:DDVelocityUnitMilesPerHour
-															           toUnit:DDVelocityUnitFurlongsPerMicrofortnight];
-															   
+```Objective-C
+NSNumber *value = [[DDUnitConverter velocityUnitConverter]convertNumber:@100 
+															   fromUnit:DDVelocityUnitMilesPerHour 
+														         toUnit:DDVelocityUnitFurlongsPerMicrofortnight];
+								 
+```
 ## Precision
 
 `DDUnitConverter` does all its transformations using `NSDecimalNumber`, so your precision is limited to anything `NSDecimalNumber` can handle.
-															   
+												   
 ## Converters
 
 `DDUnitConverter` has converters for the following categories:
