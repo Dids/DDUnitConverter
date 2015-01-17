@@ -11,7 +11,7 @@
 @implementation DDUnitConverter (DDByteUnitConverter)
 
 + (id) byteUnitConverter {
-	return [[[DDByteUnitConverter alloc] init] autorelease];
+	return [[DDByteUnitConverter alloc] init];
 }
 
 @end

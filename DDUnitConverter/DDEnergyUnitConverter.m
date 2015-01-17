@@ -12,7 +12,7 @@
 @implementation DDUnitConverter (DDEnergyUnitConverter)
 
 + (id) energyUnitConverter {
-	return [[[DDEnergyUnitConverter alloc] init] autorelease];
+	return [[DDEnergyUnitConverter alloc] init];
 }
 
 @end

@@ -11,7 +11,7 @@
 @implementation DDUnitConverter (DDTimeUnitConverter)
 
 + (id) timeUnitConverter {
-	return [[[DDTimeUnitConverter alloc] init] autorelease];
+	return [[DDTimeUnitConverter alloc] init];
 }
 
 @end

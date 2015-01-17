@@ -12,7 +12,7 @@
 @implementation DDUnitConverter (DDAngleUnitConverter)
 
 + (id) angleUnitConverter {
-	return [[[DDAngleUnitConverter alloc] init] autorelease];
+	return [[DDAngleUnitConverter alloc] init];
 }
 
 @end

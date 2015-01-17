@@ -11,7 +11,7 @@
 @implementation DDUnitConverter (DDCurrentUnitConverter)
 
 + (id) currentUnitConverter {
-	return [[[DDCurrentUnitConverter alloc] init] autorelease];
+	return [[DDCurrentUnitConverter alloc] init];
 }
 
 @end
