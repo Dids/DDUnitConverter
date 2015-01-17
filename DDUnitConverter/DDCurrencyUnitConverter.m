@@ -121,6 +121,63 @@ static NSString *_DDCurrencyNames[] = {
     @"Bolivar Fuerte",
     @"SDR"
 };
+
+static NSString *_DDCurrencySymbols[] = {
+    @"€",
+    @"¥",
+    @"£",
+    @"$",
+    @"DA",
+    @"$",
+    @"$",
+    @"BD",
+    @"P",
+    @"R$",
+    @"$",
+    @"$",
+    @"$",
+    @"¥",
+    @"$",
+    @"Kč",
+    @"dkr",
+    @"Ft",
+    @"Kr",
+    @"₹",
+    @"Rp",
+    @"﷼",
+    @"₪",
+    @"лв",
+    @"₩",
+    @"KD",
+    @"LD",
+    @"MR",
+    @"Rs",
+    @"$",
+    @"Rs",
+    @"$",
+    @"kr",
+    @"﷼",
+    @"Rs",
+    @"S/.",
+    @"₱",
+    @"zł",
+    @"﷼",
+    @"руб",
+    @"﷼",
+    @"$",
+    @"R",
+    @"Rs",
+    @"kr",
+    @"CHF",
+    @"฿",
+    @"TT$",
+    @"DT",
+    @"Dh",
+    @"$U",
+    @"Bs",
+    @""
+};
+
 static NSMutableDictionary *_DDCurrencyExchangeRates = nil;
 static dispatch_queue_t updateQueue = nil;
 
@@ -138,6 +195,11 @@ static dispatch_queue_t updateQueue = nil;
 + (NSString *)nameOfCurrencyUnit:(DDCurrencyUnit)unit {
     if (unit > DDCurrencyUnitSDR) { return nil; }
     return _DDCurrencyNames[unit];
+}
+
++ (NSString *)currencySymbolOfCurrencyUnit:(DDCurrencyUnit)unit {
+    if (unit > DDCurrencyUnitSDR) { return nil; }
+    return _DDCurrencySymbols[unit];
 }
 
 + (NSError *) refreshExchangeRatesInBackground {
